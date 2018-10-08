@@ -1,14 +1,13 @@
 package com.example.danilius.phoneapp;
 
-import java.util.List;
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
+
+import java.util.List;
 
 public class PhoneBookAdapter extends BaseAdapter {
     private Context mContext;
@@ -40,22 +39,22 @@ public class PhoneBookAdapter extends BaseAdapter {
         PhoneBook entry = mListPhoneBook.get(pos);
 
         // inflating list view layout if null
-        if(convertView == null) {
+        if (convertView == null) {
             LayoutInflater inflater = LayoutInflater.from(mContext);
             convertView = inflater.inflate(R.layout.list_item_layout, null);
         }
 
 
         // set name
-        TextView tvName = (TextView)convertView.findViewById(R.id.tvName);
+        TextView tvName = (TextView) convertView.findViewById(R.id.tvName);
         tvName.setText(entry.getName());
 
         // set phone
-        TextView tvPhone = (TextView)convertView.findViewById(R.id.tvPhone);
+        TextView tvPhone = (TextView) convertView.findViewById(R.id.tvPhone);
         tvPhone.setText(entry.getPhone());
 
         // set email
-        TextView tvEmail = (TextView)convertView.findViewById(R.id.tvEmail);
+        TextView tvEmail = (TextView) convertView.findViewById(R.id.tvEmail);
         tvEmail.setText(entry.getEmail());
 
         return convertView;

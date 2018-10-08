@@ -1,7 +1,5 @@
 package com.example.danilius.phoneapp;
 
-import android.graphics.Bitmap;
-
 import java.io.Serializable;
 
 public class PhoneBook implements Serializable {
@@ -18,6 +16,7 @@ public class PhoneBook implements Serializable {
     public void setName(String name) {
         mName = name;
     }
+
     public String getName() {
         return mName;
     }
@@ -25,6 +24,7 @@ public class PhoneBook implements Serializable {
     public void setPhone(String phone) {
         mPhone = phone;
     }
+
     public String getPhone() {
         return mPhone;
     }
@@ -32,6 +32,7 @@ public class PhoneBook implements Serializable {
     public void setEmail(String email) {
         mEmail = email;
     }
+
     public String getEmail() {
         return mEmail;
     }
