@@ -3,14 +3,18 @@ package com.example.danilius.phoneapp;
 import java.io.Serializable;
 
 public class PhoneBook implements Serializable {
+    private Integer mId;
     private String mName;
-    private String mPhone;
+    private Integer mPhone;
     private String mEmail;
 
-    public PhoneBook(String name, String phone, String email) {
+    public PhoneBook(String name, Integer phonenumber, String email) {
         mName = name;
-        mPhone = phone;
+        mPhone = phonenumber;
         mEmail = email;
+    }
+    public Integer getId() {
+        return mId;
     }
 
     public void setName(String name) {
@@ -21,11 +25,11 @@ public class PhoneBook implements Serializable {
         return mName;
     }
 
-    public void setPhone(String phone) {
+    public void setPhone(Integer phone) {
         mPhone = phone;
     }
 
-    public String getPhone() {
+    public Integer getPhone() {
         return mPhone;
     }
 
