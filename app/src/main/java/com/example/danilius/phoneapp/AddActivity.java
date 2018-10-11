@@ -22,23 +22,23 @@ import com.example.danilius.phoneapp.data.PhoneContract;
 import java.io.IOException;
 import java.io.StringReader;
 
-public class EditActivity extends AppCompatActivity {
+public class AddActivity extends AppCompatActivity {
     public TextView namefield, phonefield, emailfield;
     private Button btnSave;
     private Button btnDelete;
     private Button btnCall;
     private PhoneAppDbHelper dbHelper;
     private SQLiteDatabase db;
-    private String name,email;
+    private String name, email;
     private Integer phonenumber;
     private PhoneBook phoneBook;
+
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_edit);
+        setContentView(R.layout.activity_add);
         btnSave = (Button) findViewById(R.id.button_save);
-        btnDelete = (Button) findViewById(R.id.button_delete);
-        btnCall = (Button) findViewById(R.id.button_call);
         dbHelper = new PhoneAppDbHelper(this);
         try {
             dbHelper.updateDataBase();
@@ -59,20 +59,12 @@ public class EditActivity extends AppCompatActivity {
         phonefield = (EditText) findViewById(R.id.phone_number);
         emailfield = (EditText) findViewById(R.id.email);
         Bundle arguments = getIntent().getExtras();
-        phoneBook = new PhoneBook("",0,"");
-        int permissionStatus = ContextCompat.checkSelfPermission(EditActivity.this, Manifest.permission.CALL_PHONE);
-        if (arguments != null) {
-            phoneBook = (PhoneBook) arguments.getSerializable(PhoneBook.class.getSimpleName());
-
-            namefield.setText(phoneBook.getName());
-            phonefield.setText(phoneBook.getPhone().toString());
-            emailfield.setText(phoneBook.getEmail());
-
-        }
-
+        phoneBook = new PhoneBook("", 0, "");
+        int permissionStatus = ContextCompat.checkSelfPermission(AddActivity.this, Manifest.permission.CALL_PHONE);
         View.OnClickListener oclBtnSave = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 name = namefield.getText().toString();
                 phonenumber = Integer.parseInt(phonefield.getText().toString());
                 email = emailfield.getText().toString();
@@ -80,38 +72,13 @@ public class EditActivity extends AppCompatActivity {
                 cv.put(PhoneContract.PhoneEntry.COLUMN_NAME, name);
                 cv.put(PhoneContract.PhoneEntry.COLUMN_PHONENUMBER, phonenumber);
                 cv.put(PhoneContract.PhoneEntry.COLUMN_EMAIL, email);
-                //db.execSQL("UPDATE phonebook SET name = "+name+", phonenumber= "+phonenumber+", email="+email+" WHERE name = "+phoneBook.getName()+" and phonenumber= "+phoneBook.getPhone()+" and email="+phoneBook.getEmail()+";");
-                db.update("phonebook",cv,"name = ? AND phonenumber = ? AND email = ?",new String[]{phoneBook.getName(),String.valueOf(phoneBook.getPhone()),phoneBook.getEmail()});
-                //db.update("phonebook",cv,PhoneContract.PhoneEntry.COLUMN_NAME+"="+phoneBook.getName()+"and"+PhoneContract.PhoneEntry.COLUMN_PHONENUMBER+"="+String.valueOf(phoneBook.getPhone())+"and"+PhoneContract.PhoneEntry.COLUMN_EMAIL+"="+phoneBook.getEmail(),null);
-                Intent intent = new Intent(EditActivity.this, MainActivity.class);
+                db.insert("phonebook",null,cv);
+                //db.execSQL("INSERT INTO phonebook VALUE(name = " + name + ", phonenumber= " + phonenumber + ", email=" + email+");");
+                Intent intent = new Intent(AddActivity.this, MainActivity.class);
                 startActivity(intent);
-            }
+              }
         };
         btnSave.setOnClickListener(oclBtnSave);
-
-        View.OnClickListener oclBtnDelete = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                phonenumber = Integer.getInteger(phonefield.getText().toString());
-                db.execSQL("DELETE FROM phonebook WHERE phonenumber="+phoneBook.getPhone().toString()+";");
-                // установка текста элемента TextView
-                Intent intent = new Intent(EditActivity.this, MainActivity.class);
-                startActivity(intent);
-            }
-        };
-        btnDelete.setOnClickListener(oclBtnDelete);
-
-        View.OnClickListener oclBtnCall = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse(phoneBook.getPhone().toString()));
-                if (intent.resolveActivity(getPackageManager()) != null) {
-                    startActivity(intent);
-                }
-             }
-        };
-       // btnCall.setOnClickListener(oclBtnCall);
 
     }
 }
