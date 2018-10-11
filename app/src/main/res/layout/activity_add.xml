@@ -38,7 +38,7 @@
 
     <Button
         android:id="@+id/button_save"
-        android:layout_width="372dp"
+        android:layout_width="374dp"
         android:layout_height="wrap_content"
         android:onClick="onClick"
         android:text="Сохранить" />

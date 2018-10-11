@@ -32,18 +32,18 @@ public class MainActivity extends AppCompatActivity {
     private List<PhoneBook> listPhoneBook = new ArrayList<PhoneBook>();
     private PhoneAppDbHelper dbHelper;
     private SQLiteDatabase db;
-    private Button btnAdd;
+    private Button btnAdd,btnCall;
     Cursor c;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        // получаем элемент TextView
         selection = (TextView) findViewById(R.id.selection);
-        // получаем элемент ListView
         lvPhone = (ListView) findViewById(R.id.listPhone);
         btnAdd = (Button) findViewById(R.id.button_add);
+        btnCall = (Button) findViewById(R.id.button_call);
+
         dbHelper = new PhoneAppDbHelper(this);
         try {
             dbHelper.updateDataBase();
@@ -66,43 +66,21 @@ public class MainActivity extends AppCompatActivity {
         }
         c.close();
 
-        // создаем адаптер
         PhoneBookAdapter adapter = new PhoneBookAdapter(this, listPhoneBook);
-        // устанавливаем для списка адаптер
         lvPhone.setAdapter(adapter);
-        // добвляем для списка слушатель
+
+        // НАЖАТИЕ НА ЭЛЕМЕНТ СПИСКА
         lvPhone.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-                // по позиции получаем выбранный элемент
                 PhoneBook selectedItem = listPhoneBook.get(position);
-                // установка текста элемента TextView
                 Intent intent = new Intent(MainActivity.this, EditActivity.class);
                 intent.putExtra(PhoneBook.class.getSimpleName(), selectedItem);
                 startActivity(intent);
             }
         });
 
-        View.OnClickListener oclBtnOk = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Cursor cursor = db.rawQuery("SELECT COUNT(*) FROM phonebook;", null);
-                //db.rawQuery("INSERT INTO phonebook (name, phonenumber, email) VALUES ('', 0, '');", null);
-                ContentValues cv = new ContentValues();
-                cv.put(PhoneContract.PhoneEntry.COLUMN_NAME, "");
-                cv.put(PhoneContract.PhoneEntry.COLUMN_PHONENUMBER, 0);
-                cv.put(PhoneContract.PhoneEntry.COLUMN_EMAIL, "");
-                //db.insert(PhoneContract.PhoneEntry.TABLE_NAME,null,cv);
-                //db.execSQL("INSERT INTO phonebook (name, phonenumber, email) VALUES ('', 0, '');");
-                listPhoneBook.add(new PhoneBook("", 0, ""));
-                PhoneBook selectedItem = listPhoneBook.get(listPhoneBook.size() - 1);
-                // установка текста элемента TextView
-                Intent intent = new Intent(MainActivity.this, EditActivity.class);
-                intent.putExtra(PhoneBook.class.getSimpleName(), selectedItem);
-                startActivity(intent);
-            }
-        };
-        btnAdd.setOnClickListener(oclBtnOk);
+        //КНОПКА ДОБАВЛЕНИЯ
         View.OnClickListener oclBtnAdd = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -113,7 +91,35 @@ public class MainActivity extends AppCompatActivity {
         };
         btnAdd.setOnClickListener(oclBtnAdd);
 
+        //КНОПКА ЗВОНКА
+        View.OnClickListener oclBtnCall = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(MainActivity.this, CallActivity.class);
+                startActivity(intent);
+            }
+        };
+        btnCall.setOnClickListener(oclBtnCall);
     }
 
 }
 
+/*View.OnClickListener oclBtnOk = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Cursor cursor = db.rawQuery("SELECT COUNT(*) FROM phonebook;", null);
+                ContentValues cv = new ContentValues();
+                cv.put(PhoneContract.PhoneEntry.COLUMN_NAME, "");
+                cv.put(PhoneContract.PhoneEntry.COLUMN_PHONENUMBER, 0);
+                cv.put(PhoneContract.PhoneEntry.COLUMN_EMAIL, "");
+
+                listPhoneBook.add(new PhoneBook("", 0, ""));
+                PhoneBook selectedItem = listPhoneBook.get(listPhoneBook.size() - 1);
+
+                Intent intent = new Intent(MainActivity.this, EditActivity.class);
+                intent.putExtra(PhoneBook.class.getSimpleName(), selectedItem);
+                startActivity(intent);
+            }
+        };
+        btnAdd.setOnClickListener(oclBtnOk);*/
