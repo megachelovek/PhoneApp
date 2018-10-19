@@ -40,6 +40,12 @@
             android:parentActivityName=".MainActivity">
 
         </activity>
+        <activity
+            android:name=".ClientActivity"
+            android:label="Call"
+            android:parentActivityName=".MainActivity">
+
+        </activity>
     </application>
 
 </manifest>

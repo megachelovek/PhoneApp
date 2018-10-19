@@ -1,16 +1,13 @@
 package com.example.danilius.phoneapp;
 
-import android.app.PendingIntent;
-import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
-import android.database.DatabaseUtils;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -19,43 +16,70 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.danilius.phoneapp.data.PhoneAppDbHelper;
-import com.example.danilius.phoneapp.data.PhoneContract;
+
+import org.json.simple.JSONArray;
 
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class ClientActivity extends AppCompatActivity {
 
     private ListView lvPhone;
     private TextView selection;
     private List<PhoneBook> listPhoneBook = new ArrayList<PhoneBook>();
     private PhoneAppDbHelper dbHelper;
     private SQLiteDatabase db;
-    private Button btnAdd,btnCall;
     Cursor c;
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_client);
         selection = (TextView) findViewById(R.id.selection);
         lvPhone = (ListView) findViewById(R.id.listPhone);
-        btnAdd = (Button) findViewById(R.id.button_add);
-        btnCall = (Button) findViewById(R.id.button_call);
 
-        dbHelper = new PhoneAppDbHelper(this);
-        try {
-            dbHelper.updateDataBase();
-        } catch (IOException mIOException) {
-            throw new Error("UnableToUpdateDatabase");
+        List<String> names;
+
+        try (ServerSocket serverSocket = new ServerSocket(2121)) {
+            try (Socket socket = serverSocket.accept();
+                 ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream())) {
+                URI uri = new URI("localhost:2121/getAll");
+                out.writeObject(uri);
+            }
+            catch (IOException exc) {
+                exc.printStackTrace();
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            }
+        }
+        catch (IOException exc) {
+            exc.printStackTrace();
         }
 
-        try {
-            db = dbHelper.getReadableDatabase();
-        } catch (SQLException mSQLException) {
-            throw mSQLException;
+        try (Socket socket = new Socket("192.168.1.34", 2121)) {
+        try (ObjectInputStream in = new ObjectInputStream(socket.getInputStream())) {
+            try {
+                JSONArray jsonArray = (JSONArray) in.readObject();
+            } catch (ClassNotFoundException exc) {
+                exc.printStackTrace();
+            }
+        } catch (IOException exc) {
+            exc.printStackTrace();
         }
+    } catch (UnknownHostException exc) {
+        exc.printStackTrace();
+    } catch (IOException exc) {
+        exc.printStackTrace();
+    }
 
         c = db.rawQuery("SELECT * FROM phonebook;", null);
         if (c.moveToFirst()) {
@@ -74,44 +98,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
                 PhoneBook selectedItem = listPhoneBook.get(position);
-                Intent intent = new Intent(MainActivity.this, EditActivity.class);
+                Intent intent = new Intent(ClientActivity.this, EditActivity.class);
                 intent.putExtra(PhoneBook.class.getSimpleName(), selectedItem);
                 startActivity(intent);
             }
         });
 
-        //КНОПКА ДОБАВЛЕНИЯ
-        View.OnClickListener oclBtnAdd = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-                Intent intent = new Intent(MainActivity.this, AddActivity.class);
-                startActivity(intent);
-            }
-        };
-        btnAdd.setOnClickListener(oclBtnAdd);
 
-        //КНОПКА ЗВОНКА
-        View.OnClickListener oclBtnCall = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Intent intent = new Intent(MainActivity.this, CallActivity.class);
-                startActivity(intent);
-            }
-        };
-        btnCall.setOnClickListener(oclBtnCall);
-
-        //КНОПКА СИНХРОНИЗАЦИИ
-        View.OnClickListener oclBtnClient = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Intent intent = new Intent(MainActivity.this, ClientActivity.class);
-                startActivity(intent);
-            }
-        };
-        btnCall.setOnClickListener(oclBtnClient);
     }
 
 }
