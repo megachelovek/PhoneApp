@@ -4,5 +4,6 @@
     <string name="hello_world">Hello world!</string>
     <string name="hello">SimpleDialer</string>
     <string name="main_label">My Friends</string>
+    <string name="FileResponse"></string>
 
 </resources>

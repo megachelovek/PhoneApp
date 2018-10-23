@@ -22,17 +22,19 @@ import com.example.danilius.phoneapp.data.PhoneAppDbHelper;
 import com.example.danilius.phoneapp.data.PhoneContract;
 
 import java.io.IOException;
+import java.text.BreakIterator;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+
 
     private ListView lvPhone;
     private TextView selection;
     private List<PhoneBook> listPhoneBook = new ArrayList<PhoneBook>();
     private PhoneAppDbHelper dbHelper;
     private SQLiteDatabase db;
-    private Button btnAdd,btnCall;
+    private Button btnAdd,btnCall,btnClient;
     Cursor c;
 
     @Override
@@ -43,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
         lvPhone = (ListView) findViewById(R.id.listPhone);
         btnAdd = (Button) findViewById(R.id.button_add);
         btnCall = (Button) findViewById(R.id.button_call);
+        btnClient = (Button) findViewById(R.id.button_sync);
 
         dbHelper = new PhoneAppDbHelper(this);
         try {
@@ -111,26 +114,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         };
-        btnCall.setOnClickListener(oclBtnClient);
+        btnClient.setOnClickListener(oclBtnClient);
     }
 
 }
-
-/*View.OnClickListener oclBtnOk = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Cursor cursor = db.rawQuery("SELECT COUNT(*) FROM phonebook;", null);
-                ContentValues cv = new ContentValues();
-                cv.put(PhoneContract.PhoneEntry.COLUMN_NAME, "");
-                cv.put(PhoneContract.PhoneEntry.COLUMN_PHONENUMBER, 0);
-                cv.put(PhoneContract.PhoneEntry.COLUMN_EMAIL, "");
-
-                listPhoneBook.add(new PhoneBook("", 0, ""));
-                PhoneBook selectedItem = listPhoneBook.get(listPhoneBook.size() - 1);
-
-                Intent intent = new Intent(MainActivity.this, EditActivity.class);
-                intent.putExtra(PhoneBook.class.getSimpleName(), selectedItem);
-                startActivity(intent);
-            }
-        };
-        btnAdd.setOnClickListener(oclBtnOk);*/
