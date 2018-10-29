@@ -1,8 +1,8 @@
 package com.example.danilius.phoneapp;
 
+import android.app.Activity;
 import android.os.AsyncTask;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -17,15 +17,16 @@ public class Client extends AsyncTask<Void, Void, String> {
     String response = "";
     TextView textResponse;
     String File;
-    Boolean goterror = false;
-    public IClient Delegate=null;
+    Activity tdelegate;
+    CallbackClass callback = new CallbackClass();
 
 
-    public Client(String addr, int port, TextView textResponse, IClient delegate) {
+    public Client(String addr, int port, TextView textResponse, Activity delegate) {
         dstAddress = addr;
         dstPort = port;
         this.textResponse = textResponse;
-        Delegate =delegate;
+        tdelegate = delegate;
+
     }
     @Override
     protected String doInBackground(Void... arg0) {
@@ -68,16 +69,13 @@ public class Client extends AsyncTask<Void, Void, String> {
         return null;
     }
 
-
-
-
     @Override
     protected void onPostExecute(String result) {
-        if(Delegate!=null)
-        {
-            Delegate.postResult(result);
-        }
-        super.onPostExecute(result);
+        callback.registerCallBack((CallbackClass.IClientCallback) tdelegate);
+        TextView msg = tdelegate.findViewById(R.id.textview_file);
+        msg.setText(File);
+       //сделать вызов callback !!!!!!!!!
+
     }
 
 }

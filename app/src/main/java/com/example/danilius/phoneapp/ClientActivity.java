@@ -17,6 +17,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.danilius.phoneapp.data.PhoneAppDbHelper;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.net.InetAddress;
 import java.net.NetworkInterface;
@@ -24,7 +26,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class ClientActivity extends AppCompatActivity implements IClient {
+public class ClientActivity extends AppCompatActivity implements CallbackClass.IClientCallback {
 
     private ListView lvPhone;
     private TextView selection;
@@ -35,10 +37,11 @@ public class ClientActivity extends AppCompatActivity implements IClient {
     Client client;
     public TextView  msg,textview_file;
     int port =8080;
-    private String File ="",ip,addr;
+    private String File,ip,addr;
     private Button ClientServer, ServerClient;
     EditText ipfield;
     Cursor c;
+
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
@@ -53,7 +56,7 @@ public class ClientActivity extends AppCompatActivity implements IClient {
         ServerClient = (Button) findViewById(R.id.button_server_client);
         ipfield = (EditText) findViewById(R.id.editText_ip);
         msg.setText(getIPAddress(true));
-        Client client=new Client();
+
 
         if (ContextCompat.checkSelfPermission(ClientActivity.this, Manifest.permission.INTERNET)!= PackageManager.PERMISSION_GRANTED){
             ActivityCompat.requestPermissions(ClientActivity.this,new String[]{Manifest.permission.INTERNET},1);}
@@ -62,11 +65,8 @@ public class ClientActivity extends AppCompatActivity implements IClient {
         View.OnClickListener oclBtnServerClient = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               // File="localhost:8080/getall";
-                //server = new Server(ClientActivity.this, File);
                 client = new Client(ipfield.getText().toString(),port,msg,ClientActivity.this);
                 client.execute();
-
             }
 
         };
@@ -99,10 +99,11 @@ public class ClientActivity extends AppCompatActivity implements IClient {
         return "";
     }
 
-    @Override
-    public void postResult(String output){
-        msg.setText(File);
-        //Here you will receive the result fired from async class
-        //of onPostExecute(result) method.
+    public void callingBack(){
+        File = textview_file.getText().toString();
+        listPhoneBook = new Gson().fromJson(File,  new TypeToken<List<PhoneBook>>(){}.getType());
+        Gson gson= new Gson();
+        String s ="111";
     }
+
 }
