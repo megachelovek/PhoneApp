@@ -3,10 +3,8 @@ package com.example.danilius.phoneapp;
 import android.Manifest;
 import android.content.ContentValues;
 import android.content.Intent;
-import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -20,7 +18,6 @@ import com.example.danilius.phoneapp.data.PhoneAppDbHelper;
 import com.example.danilius.phoneapp.data.PhoneContract;
 
 import java.io.IOException;
-import java.io.StringReader;
 
 public class AddActivity extends AppCompatActivity {
     public TextView namefield, phonefield, emailfield;
@@ -59,7 +56,7 @@ public class AddActivity extends AppCompatActivity {
         phonefield = (EditText) findViewById(R.id.phone_number);
         emailfield = (EditText) findViewById(R.id.email);
         Bundle arguments = getIntent().getExtras();
-        phoneBook = new PhoneBook("", 0, "");
+        phoneBook = new PhoneBook("", Long.valueOf(0), "");
         int permissionStatus = ContextCompat.checkSelfPermission(AddActivity.this, Manifest.permission.CALL_PHONE);
         View.OnClickListener oclBtnSave = new View.OnClickListener() {
             @Override

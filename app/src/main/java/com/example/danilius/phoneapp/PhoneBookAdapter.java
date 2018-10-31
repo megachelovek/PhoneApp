@@ -51,7 +51,8 @@ public class PhoneBookAdapter extends BaseAdapter {
 
         // set phone
         TextView tvPhone = (TextView) convertView.findViewById(R.id.tvPhone);
-        tvPhone.setText(entry.getPhone().toString());
+        if (entry.getPhone() != null){tvPhone.setText(entry.getPhone().toString());}
+
 
         // set email
         TextView tvEmail = (TextView) convertView.findViewById(R.id.tvEmail);

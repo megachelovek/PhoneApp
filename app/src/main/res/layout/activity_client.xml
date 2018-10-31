@@ -6,7 +6,7 @@
     android:orientation="vertical">
 
     <ListView
-        android:id="@+id/listPhone"
+        android:id="@+id/listPhoneClient"
         android:layout_width="fill_parent"
         android:layout_height="393dp">
 
@@ -25,29 +25,36 @@
             android:gravity="bottom"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/textView_msg"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="31dp"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="TextView" />
+                android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/textview_file"
-                android:layout_width="match_parent"
-                android:layout_height="4dp"
-                android:layout_weight="1"
-                android:text="TextView"
-                android:visibility="invisible" />
+                <EditText
+                    android:id="@+id/editText_ip"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:inputType="textPersonName"
+                    android:text="192.168.1.34" />
 
-            <EditText
-                android:id="@+id/editText_ip"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ems="10"
-                android:inputType="textPersonName"
-                android:text="192.168.1.34" />
+                <TextView
+                    android:id="@+id/textview_file"
+                    android:layout_width="216dp"
+                    android:layout_height="4dp"
+                    android:layout_weight="1"
+                    android:text="TextView"
+                    android:visibility="invisible" />
+
+                <TextView
+                    android:id="@+id/textView_msg"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="TextView" />
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -58,14 +65,21 @@
                 <Button
                     android:id="@+id/button_client_server"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:text="с клиента на серв" />
 
                 <Button
-                    android:id="@+id/button_server_client"
+                    android:id="@+id/add_in_DB"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="+" />
+
+                <Button
+                    android:id="@+id/button_server_client"
+                    android:layout_width="184dp"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:text="с серв на клиент" />
             </LinearLayout>

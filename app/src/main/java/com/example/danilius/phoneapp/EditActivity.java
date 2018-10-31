@@ -3,14 +3,11 @@ package com.example.danilius.phoneapp;
 import android.Manifest;
 import android.content.ContentValues;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -22,7 +19,6 @@ import com.example.danilius.phoneapp.data.PhoneAppDbHelper;
 import com.example.danilius.phoneapp.data.PhoneContract;
 
 import java.io.IOException;
-import java.io.StringReader;
 
 public class EditActivity extends AppCompatActivity {
     public TextView namefield, phonefield, emailfield;
@@ -65,7 +61,7 @@ public class EditActivity extends AppCompatActivity {
         phonefield = (EditText) findViewById(R.id.phone_number);
         emailfield = (EditText) findViewById(R.id.email);
         Bundle arguments = getIntent().getExtras();
-        phoneBook = new PhoneBook("", 0, "");
+        phoneBook = new PhoneBook("", Long.getLong("0"), "");
         int permissionStatus = ContextCompat.checkSelfPermission(EditActivity.this, Manifest.permission.CALL_PHONE);
         if (arguments != null) {
             phoneBook = (PhoneBook) arguments.getSerializable(PhoneBook.class.getSimpleName());
@@ -75,7 +71,7 @@ public class EditActivity extends AppCompatActivity {
             emailfield.setText(phoneBook.getEmail());
 
         }
-
+        //Сохранить
         View.OnClickListener oclBtnSave = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -94,19 +90,19 @@ public class EditActivity extends AppCompatActivity {
             }
         };
         btnSave.setOnClickListener(oclBtnSave);
-
+        //Удалить
         View.OnClickListener oclBtnDelete = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 phonenumber = Integer.getInteger(phonefield.getText().toString());
-                db.execSQL("DELETE FROM phonebook WHERE phonenumber=" + phoneBook.getPhone().toString() + ";");
+                db.delete("phonebook","phonenumber = ? AND name= ? AND email= ?", new String[] {phoneBook.getPhone().toString(),phoneBook.getName(),phoneBook.getEmail()});
                 // установка текста элемента TextView
                 Intent intent = new Intent(EditActivity.this, MainActivity.class);
                 startActivity(intent);
             }
         };
         btnDelete.setOnClickListener(oclBtnDelete);
-
+        //Позвонить
         View.OnClickListener oclBtnCall = new View.OnClickListener() {
             @Override
             public void onClick(View v) {

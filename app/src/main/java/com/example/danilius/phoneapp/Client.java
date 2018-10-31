@@ -18,14 +18,15 @@ public class Client extends AsyncTask<Void, Void, String> {
     TextView textResponse;
     String File;
     Activity tdelegate;
-    CallbackClass callback = new CallbackClass();
+    private IClientCallback callback_async;
 
 
-    public Client(String addr, int port, TextView textResponse, Activity delegate) {
+    public Client(String addr, int port, TextView textResponse, Activity delegate,IClientCallback callback) {
         dstAddress = addr;
         dstPort = port;
         this.textResponse = textResponse;
         tdelegate = delegate;
+        this.callback_async =callback;
 
     }
     @Override
@@ -71,11 +72,9 @@ public class Client extends AsyncTask<Void, Void, String> {
 
     @Override
     protected void onPostExecute(String result) {
-        callback.registerCallBack((CallbackClass.IClientCallback) tdelegate);
         TextView msg = tdelegate.findViewById(R.id.textview_file);
         msg.setText(File);
-       //сделать вызов callback !!!!!!!!!
-
+        callback_async.callingBack();
     }
 
 }

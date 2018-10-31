@@ -1,16 +1,11 @@
 package com.example.danilius.phoneapp;
 
-import android.app.PendingIntent;
-import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
-import android.database.DatabaseUtils;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -19,10 +14,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.danilius.phoneapp.data.PhoneAppDbHelper;
-import com.example.danilius.phoneapp.data.PhoneContract;
 
 import java.io.IOException;
-import java.text.BreakIterator;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
         c = db.rawQuery("SELECT * FROM phonebook;", null);
         if (c.moveToFirst()) {
             do {
-                listPhoneBook.add(new PhoneBook(c.getString(1), c.getInt(2), c.getString(3)));
+                listPhoneBook.add(new PhoneBook(c.getString(1), c.getLong(2), c.getString(3)));
             }
             while (c.moveToNext());
         }

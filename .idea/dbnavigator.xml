@@ -25,13 +25,14 @@
     <show-object-properties value="true" />
     <loaded-nodes>
       <connection connection-id="4689eae8-0a9b-435b-823e-7869cb7a7285">
-        <schema name="main" object-types="table" />
+        <schema name="main" object-types="column, constraint, index, table, dataset trigger, view" />
       </connection>
     </loaded-nodes>
   </component>
   <component name="DBNavigator.Project.DatabaseConsoleManager">
     <connection id="4689eae8-0a9b-435b-823e-7869cb7a7285">
-      <console name="Main" type="STANDARD" />
+      <console name="Main" type="STANDARD"><![CDATA[DELETE FROM phonebook WHERE phonenumber=123123,name=Tom Smith, email=aa@aa;
+select * from phonebook;]]></console>
     </connection>
   </component>
   <component name="DBNavigator.Project.DatabaseSessionManager">
