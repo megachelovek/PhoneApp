@@ -1,4 +1,4 @@
-package com.example.danilius.phoneapp;
+package com.example.danilius.phoneapp.Activity;
 
 import android.content.Intent;
 import android.database.Cursor;
@@ -13,6 +13,9 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.example.danilius.phoneapp.PhoneBook;
+import com.example.danilius.phoneapp.PhoneBookAdapter;
+import com.example.danilius.phoneapp.R;
 import com.example.danilius.phoneapp.data.PhoneAppDbHelper;
 
 import java.io.IOException;

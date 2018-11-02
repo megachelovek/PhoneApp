@@ -1,4 +1,4 @@
-package com.example.danilius.phoneapp;
+package com.example.danilius.phoneapp.Activity;
 
 import android.Manifest;
 import android.content.ContentValues;
@@ -19,6 +19,12 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.example.danilius.phoneapp.Client;
+import com.example.danilius.phoneapp.Activity.IClientCallback;
+import com.example.danilius.phoneapp.PhoneBook;
+import com.example.danilius.phoneapp.PhoneBookAdapter;
+import com.example.danilius.phoneapp.R;
+import com.example.danilius.phoneapp.Server;
 import com.example.danilius.phoneapp.data.PhoneAppDbHelper;
 import com.example.danilius.phoneapp.data.PhoneContract;
 import com.google.gson.Gson;
@@ -92,7 +98,7 @@ public class ClientActivity extends AppCompatActivity implements IClientCallback
         };
         ServerClient.setOnClickListener(oclBtnServerClient);
 
-        //Получить список с сервера на устройство
+        //Добавить записи с сервера на устройство
         View.OnClickListener oclBtnAddToClient = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -103,7 +109,6 @@ public class ClientActivity extends AppCompatActivity implements IClientCallback
                         cv.put(PhoneContract.PhoneEntry.COLUMN_PHONENUMBER, phoneBook.getPhone());
                         cv.put(PhoneContract.PhoneEntry.COLUMN_EMAIL, phoneBook.getPhone());
                         db.insert("phonebook",null,cv);
-
                     }
                     Intent intent = new Intent(ClientActivity.this, MainActivity.class);
                     startActivity(intent);
@@ -144,13 +149,13 @@ public class ClientActivity extends AppCompatActivity implements IClientCallback
 
     public void callingBack(){
         File = textview_file.getText().toString();
-        StringBuilder str= new StringBuilder(File);
-        str.delete(0,11);
-        File = str.toString();
-        Type type = new TypeToken<List<PhoneBook>>(){}.getType();
-        listPhoneBook = new Gson().fromJson(File,type);
-        PhoneBookAdapter adapter = new PhoneBookAdapter(this, listPhoneBook);
-        lvPhone.setAdapter(adapter);
+        if (File!="request_completed") {
+            Type type = new TypeToken<List<PhoneBook>>() {
+            }.getType();
+            listPhoneBook = new Gson().fromJson(File, type);
+            PhoneBookAdapter adapter = new PhoneBookAdapter(this, listPhoneBook);
+            lvPhone.setAdapter(adapter);
+        }
     }
 
 }

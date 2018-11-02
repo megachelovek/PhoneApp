@@ -1,4 +1,4 @@
-package com.example.danilius.phoneapp;
+package com.example.danilius.phoneapp.Activity;
 
 import android.Manifest;
 import android.content.Intent;
@@ -16,6 +16,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 
+import com.example.danilius.phoneapp.PhoneBook;
+import com.example.danilius.phoneapp.R;
 import com.example.danilius.phoneapp.data.PhoneAppDbHelper;
 
 public class CallActivity extends AppCompatActivity {
