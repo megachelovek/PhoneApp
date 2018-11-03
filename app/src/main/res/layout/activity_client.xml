@@ -50,10 +50,12 @@
 
                 <TextView
                     android:id="@+id/textView_msg"
+                    style="@android:style/Widget.DeviceDefault.TextView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:text="TextView" />
+                    android:text="TextView"
+                    android:textSize="24sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -61,6 +63,13 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/button_addserver"
+                    android:layout_width="119dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="+ на сервер" />
 
                 <Button
                     android:id="@+id/button_client_server"

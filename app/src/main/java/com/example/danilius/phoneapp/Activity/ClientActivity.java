@@ -50,7 +50,7 @@ public class ClientActivity extends AppCompatActivity implements IClientCallback
     public TextView  msg,textview_file;
     int port =8080;
     private String File,ip,addr;
-    private Button ClientServer, ServerClient,AddToClient;
+    private Button ClientServer, ServerClient,AddToClient,AddtoServer;
     EditText ipfield;
     Cursor c;
 
@@ -66,6 +66,7 @@ public class ClientActivity extends AppCompatActivity implements IClientCallback
         textview_file =(TextView) findViewById(R.id.textview_file);
         AddToClient = (Button) findViewById(R.id.add_in_DB);
         ClientServer = (Button) findViewById(R.id.button_client_server);
+        AddtoServer = (Button) findViewById(R.id.button_addserver);
         ServerClient = (Button) findViewById(R.id.button_server_client);
         ipfield = (EditText) findViewById(R.id.editText_ip);
         msg.setText(getIPAddress(true));
@@ -117,7 +118,16 @@ public class ClientActivity extends AppCompatActivity implements IClientCallback
 
         };
         AddToClient.setOnClickListener(oclBtnAddToClient);
-        
+        View.OnClickListener oclBtnAddToServer = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ClientActivity.this, AddServerActivity.class);
+                intent.putExtra("ip", ipfield.getText());
+                intent.putExtra("port", port);
+                startActivity(intent);
+            }
+        };
+        AddtoServer.setOnClickListener(oclBtnAddToServer);
     }
 
     public static String getIPAddress(boolean useIPv4) {
