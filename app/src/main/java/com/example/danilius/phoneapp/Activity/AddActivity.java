@@ -29,7 +29,7 @@ public class AddActivity extends AppCompatActivity {
     private PhoneAppDbHelper dbHelper;
     private SQLiteDatabase db;
     private String name, email;
-    private Integer phonenumber;
+    private Long phonenumber;
     private PhoneBook phoneBook;
 
 
@@ -63,16 +63,14 @@ public class AddActivity extends AppCompatActivity {
         View.OnClickListener oclBtnSave = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 name = namefield.getText().toString();
-                phonenumber = Integer.parseInt(phonefield.getText().toString());
+                phonenumber = Long.parseLong(phonefield.getText().toString());
                 email = emailfield.getText().toString();
                 ContentValues cv = new ContentValues();
                 cv.put(PhoneContract.PhoneEntry.COLUMN_NAME, name);
                 cv.put(PhoneContract.PhoneEntry.COLUMN_PHONENUMBER, phonenumber);
                 cv.put(PhoneContract.PhoneEntry.COLUMN_EMAIL, email);
                 db.insert("phonebook",null,cv);
-                //db.execSQL("INSERT INTO phonebook VALUE(name = " + name + ", phonenumber= " + phonenumber + ", email=" + email+");");
                 Intent intent = new Intent(AddActivity.this, MainActivity.class);
                 startActivity(intent);
               }

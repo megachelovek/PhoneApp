@@ -14,17 +14,16 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.danilius.phoneapp.Client;
-import com.example.danilius.phoneapp.Activity.IClientCallback;
 import com.example.danilius.phoneapp.PhoneBook;
 import com.example.danilius.phoneapp.PhoneBookAdapter;
 import com.example.danilius.phoneapp.R;
-import com.example.danilius.phoneapp.Server;
 import com.example.danilius.phoneapp.data.PhoneAppDbHelper;
 import com.example.danilius.phoneapp.data.PhoneContract;
 import com.google.gson.Gson;
@@ -38,14 +37,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class ClientActivity extends AppCompatActivity implements IClientCallback {
+public class ClientActivity extends AppCompatActivity implements IClientActivityCallback {
 
     private ListView lvPhone;
     private TextView selection;
     private List<PhoneBook> listPhoneBook = new ArrayList<PhoneBook>();
     private PhoneAppDbHelper dbHelper;
     private SQLiteDatabase db;
-    Server server;
     Client client;
     public TextView  msg,textview_file;
     int port =8080;
@@ -118,17 +116,31 @@ public class ClientActivity extends AppCompatActivity implements IClientCallback
 
         };
         AddToClient.setOnClickListener(oclBtnAddToClient);
+        //Добавление на сервер
         View.OnClickListener oclBtnAddToServer = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ClientActivity.this, AddServerActivity.class);
-                intent.putExtra("ip", ipfield.getText());
+                intent.putExtra("ip", ipfield.getText().toString());
                 intent.putExtra("port", port);
                 startActivity(intent);
             }
         };
         AddtoServer.setOnClickListener(oclBtnAddToServer);
+        //Нажатие на запись
+        lvPhone.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+                PhoneBook selectedItem = listPhoneBook.get(position);
+                Intent intent = new Intent(ClientActivity.this, EditServerActivity.class);
+                intent.putExtra("ip", ipfield.getText().toString());
+                intent.putExtra("port", port);
+                intent.putExtra(PhoneBook.class.getSimpleName(), selectedItem);
+                startActivity(intent);
+            }
+        });
     }
+
 
     public static String getIPAddress(boolean useIPv4) {
         try {
@@ -157,11 +169,10 @@ public class ClientActivity extends AppCompatActivity implements IClientCallback
         return "";
     }
 
-    public void callingBack(){
+    public void callingBackClientActivity(){
         File = textview_file.getText().toString();
         if (File!="request_completed") {
-            Type type = new TypeToken<List<PhoneBook>>() {
-            }.getType();
+            Type type = new TypeToken<List<PhoneBook>>() {}.getType();
             listPhoneBook = new Gson().fromJson(File, type);
             PhoneBookAdapter adapter = new PhoneBookAdapter(this, listPhoneBook);
             lvPhone.setAdapter(adapter);

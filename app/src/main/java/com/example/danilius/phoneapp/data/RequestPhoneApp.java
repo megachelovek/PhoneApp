@@ -20,4 +20,8 @@ public class RequestPhoneApp {
         dos.writeUTF("DELETE "+phoneBook.getName()+" "+phoneBook.getPhone().toString()+" "+phoneBook.getEmail());
         dos.flush();
     }
+    public static void EDIT(DataOutputStream dos, PhoneBook phoneBook,PhoneBook newphoneBook) throws IOException, InterruptedException {
+        dos.writeUTF("EDIT "+phoneBook.getName()+" "+phoneBook.getPhone().toString()+" "+phoneBook.getEmail()+" "+newphoneBook.getName()+" "+newphoneBook.getPhone().toString()+" "+newphoneBook.getEmail());
+        dos.flush();
+    }
 }

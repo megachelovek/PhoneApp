@@ -6,7 +6,9 @@ import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.widget.TextView;
 
-import com.example.danilius.phoneapp.Activity.IClientCallback;
+import com.example.danilius.phoneapp.Activity.IAddServrerActivityCallback;
+import com.example.danilius.phoneapp.Activity.IClientActivityCallback;
+import com.example.danilius.phoneapp.Activity.IEditServerActivityCallback;
 import com.example.danilius.phoneapp.data.RequestPhoneApp;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -32,25 +34,45 @@ public class Client extends AsyncTask<Void, Void, String> {
     TextView textResponse;
     String File;
     Activity tdelegate;
-    IClientCallback callback_async;
-    RestService service;
+    IClientActivityCallback clientActivityCallback;
+    IAddServrerActivityCallback addServrerActivityCallback;
+    IEditServerActivityCallback editServerActivityCallback;
     int port = 8080;
+    String action;
     Socket socket;
-    String action = "GETALL";
-    PhoneBook phoneBook;
 
-    public Client(String addr, int port, TextView textResponse, Activity delegate,IClientCallback callback) {
+    PhoneBook phoneBook,newPhoneBook;
+
+    public Client(String addr, int port, TextView textResponse, Activity delegate,IClientActivityCallback callback) {
         dstAddress = addr;
         dstPort = port;
         this.textResponse = textResponse;
         tdelegate = delegate;
-        this.callback_async =callback;
+        this.clientActivityCallback =callback;
+        action = "GETALL";
      }
-    public Client(String addr, int port,IClientCallback callback,String action_activity,PhoneBook phoneBook_activity) {
+    public Client(String addr, int port,IAddServrerActivityCallback callback,String action_activity,PhoneBook phoneBook_activity) {
         dstAddress = addr;
         dstPort = port;
         this.textResponse = textResponse;
-        this.callback_async =callback;
+        this.addServrerActivityCallback =callback;
+        action=action_activity;
+        phoneBook = phoneBook_activity;
+    }
+    public Client(String addr, int port, IEditServerActivityCallback callback, String action_activity, PhoneBook phoneBook_activity) {
+        dstAddress = addr;
+        dstPort = port;
+        this.textResponse = textResponse;
+        this.editServerActivityCallback =callback;
+        action=action_activity;
+        phoneBook = phoneBook_activity;
+    }
+    public Client(String addr, int port, IEditServerActivityCallback callback, String action_activity, PhoneBook phoneBook_activity, PhoneBook new_phoneBook_activity) {
+        dstAddress = addr;
+        dstPort = port;
+        this.textResponse = textResponse;
+        this.editServerActivityCallback =callback;
+        newPhoneBook = new_phoneBook_activity;
         action=action_activity;
         phoneBook = phoneBook_activity;
     }
@@ -59,15 +81,14 @@ public class Client extends AsyncTask<Void, Void, String> {
     protected String doInBackground(Void... arg0) {
         socket = null;
         switch (action){
-            case "GETALL":{
+            case "GETALL": {
                 try {
                     socket = new Socket(dstAddress, dstPort);
                     DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
                     RequestPhoneApp.GETALL(dos);
                     DataInputStream dataInputStream = new DataInputStream(socket.getInputStream());
                     File = dataInputStream.readUTF();
-                }
-                catch (UnknownHostException e) {
+                } catch (UnknownHostException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
                     response = "UnknownHostException: " + e.toString();
@@ -87,7 +108,7 @@ public class Client extends AsyncTask<Void, Void, String> {
                         }
                     }
                 }
-            }
+            }break;
             case "ADD":{
                 try {
                     socket = new Socket(dstAddress, dstPort);
@@ -116,7 +137,7 @@ public class Client extends AsyncTask<Void, Void, String> {
                         }
                     }
                 }
-            }
+            }break;
 
             case "DELETE":{
                 try {
@@ -146,22 +167,58 @@ public class Client extends AsyncTask<Void, Void, String> {
                         }
                     }
                 }
-            }
+            }break;
+            case "EDIT":{
+                try {
+                    socket = new Socket(dstAddress, dstPort);
+                    DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
+                    RequestPhoneApp.EDIT(dos,phoneBook,newPhoneBook);
+                    DataInputStream dataInputStream = new DataInputStream(socket.getInputStream());
+                    File = dataInputStream.readUTF();
+                }
+                catch (UnknownHostException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                    response = "UnknownHostException: " + e.toString();
+                } catch (IOException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                    response = "IOException: " + e.toString();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } finally {
+                    if (socket != null) {
+                        try {
+                            socket.close();
+                        } catch (IOException e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }break;
         }
-
         return null;
     }
 
     @Override
     protected void onPostExecute(String result) {
-        if (action == "GETALL")
-        {
-        TextView msg = tdelegate.findViewById(R.id.textview_file);
-        msg.setText(File);
-        callback_async.callingBack();
-        }
-        else {
-            callback_async.callingBack();
+        switch (action) {
+            case "GETALL": {
+                TextView msg = tdelegate.findViewById(R.id.textview_file);
+                msg.setText(File);
+                clientActivityCallback.callingBackClientActivity();
+            }break;
+            case "ADD": {
+                addServrerActivityCallback.callingBackAddServerActivity();
+            }break;
+            case "DELETE": {
+                editServerActivityCallback.callingBackEditServerActivity();
+            }break;
+            case "EDIT": {
+                editServerActivityCallback.callingBackEditServerActivity();
+            }break;
+
         }
     }
 

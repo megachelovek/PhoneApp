@@ -45,7 +45,19 @@
         </activity>
         <activity
             android:name=".Activity.ClientActivity"
-            android:label="Call"
+            android:label="Client"
+            android:parentActivityName=".Activity.MainActivity">
+
+        </activity>
+        <activity
+            android:name=".Activity.AddServerActivity"
+            android:label="AddServer"
+            android:parentActivityName=".Activity.MainActivity">
+
+        </activity>
+        <activity
+            android:name=".Activity.EditServerActivity"
+            android:label="EditServer"
             android:parentActivityName=".Activity.MainActivity">
 
         </activity>

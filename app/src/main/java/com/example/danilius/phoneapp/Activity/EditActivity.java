@@ -30,7 +30,7 @@ public class EditActivity extends AppCompatActivity {
     private PhoneAppDbHelper dbHelper;
     private SQLiteDatabase db;
     private String name,email;
-    private Integer phonenumber;
+    private Long phonenumber;
     private PhoneBook phoneBook;
     private static final int REQUEST_CALL = 1;
 
@@ -78,15 +78,12 @@ public class EditActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 name = namefield.getText().toString();
-                phonenumber = Integer.parseInt(phonefield.getText().toString());
+                phonenumber = Long.parseLong(phonefield.getText().toString());
                 email = emailfield.getText().toString();
                 ContentValues cv = new ContentValues();
                 cv.put(PhoneContract.PhoneEntry.COLUMN_NAME, name);
                 cv.put(PhoneContract.PhoneEntry.COLUMN_PHONENUMBER, phonenumber);
-                cv.put(PhoneContract.PhoneEntry.COLUMN_EMAIL, email);
-                //db.execSQL("UPDATE phonebook SET name = "+name+", phonenumber= "+phonenumber+", email="+email+" WHERE name = "+phoneBook.getName()+" and phonenumber= "+phoneBook.getPhone()+" and email="+phoneBook.getEmail()+";");
-                db.update("phonebook", cv, "name = ? AND phonenumber = ? AND email = ?", new String[]{phoneBook.getName(), String.valueOf(phoneBook.getPhone()), phoneBook.getEmail()});
-                //db.update("phonebook",cv,PhoneContract.PhoneEntry.COLUMN_NAME+"="+phoneBook.getName()+"and"+PhoneContract.PhoneEntry.COLUMN_PHONENUMBER+"="+String.valueOf(phoneBook.getPhone())+"and"+PhoneContract.PhoneEntry.COLUMN_EMAIL+"="+phoneBook.getEmail(),null);
+                cv.put(PhoneContract.PhoneEntry.COLUMN_EMAIL, email);db.update("phonebook", cv, "name = ? AND phonenumber = ? AND email = ?", new String[]{phoneBook.getName(), String.valueOf(phoneBook.getPhone()), phoneBook.getEmail()});
                 Intent intent = new Intent(EditActivity.this, MainActivity.class);
                 startActivity(intent);
             }
@@ -96,7 +93,7 @@ public class EditActivity extends AppCompatActivity {
         View.OnClickListener oclBtnDelete = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                phonenumber = Integer.getInteger(phonefield.getText().toString());
+                phonenumber = Long.parseLong(phonefield.getText().toString());
                 db.delete("phonebook","phonenumber = ? AND name= ? AND email= ?", new String[] {phoneBook.getPhone().toString(),phoneBook.getName(),phoneBook.getEmail()});
                 // установка текста элемента TextView
                 Intent intent = new Intent(EditActivity.this, MainActivity.class);
@@ -108,7 +105,6 @@ public class EditActivity extends AppCompatActivity {
         View.OnClickListener oclBtnCall = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Uri address = Uri.parse(String.valueOf(phoneBook.getPhone()));
                 Intent intent = new Intent(Intent.ACTION_CALL);
                 intent.setData(Uri.parse("tel:" + phoneBook.getPhone()));
                 startActivity(intent);
