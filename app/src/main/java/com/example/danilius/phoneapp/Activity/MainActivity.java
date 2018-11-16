@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
         c = db.rawQuery("SELECT * FROM phonebook;", null);
         if (c.moveToFirst()) {
             do {
-                listPhoneBook.add(new PhoneBook(c.getString(1), c.getLong(2), c.getString(3)));
+                listPhoneBook.add(new PhoneBook(c.getString(1), c.getLong(2), c.getString(3),c.getString(4)));
             }
             while (c.moveToNext());
         }

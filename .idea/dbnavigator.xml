@@ -32,14 +32,22 @@
   <component name="DBNavigator.Project.DatabaseConsoleManager">
     <connection id="4689eae8-0a9b-435b-823e-7869cb7a7285">
       <console name="Main" type="STANDARD"><![CDATA[DELETE FROM phonebook WHERE phonenumber=123123,name=Tom Smith, email=aa@aa;
-select * from phonebook;]]></console>
+select * from phonebook;
+ALTER TABLE phonebook ADD COLUMN imagepath {text };
+MODIFY COLUMN imagepath text;
+pragma foreign_keys = OFF;
+drop table phonebook;
+ALTER TABLE main.phonebooknew RENAME TO phonebook;
+drop table main.phonebooknew (id integer primary key autoincrement ,name text,phonenumber double, email text, imagepath text);]]></console>
     </connection>
   </component>
   <component name="DBNavigator.Project.DatabaseSessionManager">
     <connection id="4689eae8-0a9b-435b-823e-7869cb7a7285" />
   </component>
   <component name="DBNavigator.Project.DatasetFilterManager">
+    <filter-list connection-id="4689eae8-0a9b-435b-823e-7869cb7a7285" dataset="main.sqlite_sequence" active-filter-id="" />
     <filter-list connection-id="4689eae8-0a9b-435b-823e-7869cb7a7285" dataset="main.phonebook" active-filter-id="EMPTY_FILTER" />
+    <filter-list connection-id="4689eae8-0a9b-435b-823e-7869cb7a7285" dataset="main.android_metadata" active-filter-id="" />
   </component>
   <component name="DBNavigator.Project.EditorStateManager">
     <last-used-providers />

@@ -9,8 +9,9 @@
         android:id="@+id/imgAvatar"
         android:layout_width="70dip"
         android:layout_height="70dip"
-        android:scaleType="fitCenter"
-        />
+        android:contentDescription="TODO"
+        android:padding="8dp"
+        android:scaleType="fitCenter" />
 
     <LinearLayout
         android:orientation="vertical"
@@ -22,20 +23,20 @@
             android:id="@+id/tvName"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:textStyle="bold"
-            />
+            android:paddingLeft="5dp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/tvPhone"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            />
+            android:paddingLeft="5dp" />
 
         <TextView
             android:id="@+id/tvEmail"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            />
+            android:paddingLeft="5dp" />
 
     </LinearLayout>
 

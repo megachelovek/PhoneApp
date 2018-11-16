@@ -32,8 +32,7 @@ public class PhoneAppDbHelper extends SQLiteOpenHelper {
     public final static String COLUMN_EMAIL = "email";
     final String DATA_FILE_NAME = "data.txt";
     final String CREATE_TABLE = "CREATE TABLE "+TABLE_NAME+
-            "( _id INTEGER PRIMARY KEY , "+
-            " todo TEXT)";
+            "(id integer primary key autoincrement ,name text,phonenumber double, email text, imagepath text);";
     final String DROP_TABLE = "DROP TABLE IF EXISTS "+TABLE_NAME;
     private boolean mNeedUpdate = false;
     private final Context mContext;
@@ -54,7 +53,7 @@ public class PhoneAppDbHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         Log.d(DEBUG_TAG,"onCreate() called");
         db.execSQL(CREATE_TABLE);
-        fillData(db);
+        //fillData(db);
     }
 
     @Override

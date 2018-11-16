@@ -13,6 +13,7 @@ public final class PhoneContract {
         public final static String COLUMN_NAME = "name";
         public final static String COLUMN_PHONENUMBER = "phonenumber";
         public final static String COLUMN_EMAIL = "email";
+        public final static String COLUMN_IMAGEPATH = "imagepath";
 
     }
 }

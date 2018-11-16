@@ -8,7 +8,6 @@
         android:id="@+id/listPhone"
         android:layout_width="fill_parent"
         android:layout_height="450dp">
-
     </ListView>
 
     <LinearLayout
