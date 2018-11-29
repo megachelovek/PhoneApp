@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
@@ -65,32 +66,34 @@
                 android:orientation="horizontal">
 
                 <Button
-                    android:id="@+id/button_addserver"
+                    android:id="@+id/b_AddPhoneBookToServer"
                     android:layout_width="119dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:text="+ на сервер" />
+                    android:text="Добавить" />
 
-                <Button
-                    android:id="@+id/button_client_server"
-                    android:layout_width="wrap_content"
+                <ImageButton
+                    android:id="@+id/ib_AddListPhoneBooksToServer"
+                    android:layout_width="80dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:text="с клиента на серв" />
+                    android:background="@android:color/darker_gray"
+                    app:srcCompat="@android:drawable/stat_sys_upload" />
 
-                <Button
-                    android:id="@+id/add_in_DB"
-                    android:layout_width="wrap_content"
+                <ImageButton
+                    android:id="@+id/ib_AddListPhoneBooksToClient"
+                    android:layout_width="80dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:text="+" />
+                    android:background="@android:color/darker_gray"
+                    app:srcCompat="@android:drawable/stat_sys_download" />
 
                 <Button
-                    android:id="@+id/button_server_client"
+                    android:id="@+id/b_GetListFromServer"
                     android:layout_width="184dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:text="с серв на клиент" />
+                    android:text="Получить список" />
             </LinearLayout>
 
         </LinearLayout>

@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -17,20 +18,25 @@ import com.example.danilius.phoneapp.PhoneBook;
 import com.example.danilius.phoneapp.PhoneBookAdapter;
 import com.example.danilius.phoneapp.R;
 import com.example.danilius.phoneapp.data.PhoneAppDbHelper;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.support.v4.app.ActivityCompat.startActivityForResult;
 
 public class MainActivity extends AppCompatActivity {
 
 
     private ListView lvPhone;
     private TextView selection;
-    private List<PhoneBook> listPhoneBook = new ArrayList<PhoneBook>();
+    private ArrayList<PhoneBook> listPhoneBook = new ArrayList<PhoneBook>();
     private PhoneAppDbHelper dbHelper;
     private SQLiteDatabase db;
     private Button btnAdd,btnCall,btnClient;
+    private static final int READ_REQUEST_CODE = 42;
     Cursor c;
 
     @Override
@@ -67,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
 
         PhoneBookAdapter adapter = new PhoneBookAdapter(this, listPhoneBook);
         lvPhone.setAdapter(adapter);
+
 
         // НАЖАТИЕ НА ЭЛЕМЕНТ СПИСКА
         lvPhone.setOnItemClickListener(new OnItemClickListener() {
@@ -105,12 +112,16 @@ public class MainActivity extends AppCompatActivity {
         View.OnClickListener oclBtnClient = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Gson gson = new Gson();
+                String listGson = gson.toJson(listPhoneBook);
                 Intent intent = new Intent(MainActivity.this, ClientActivity.class);
+                intent.putExtra("MainListPhoneBook", listGson);
                 startActivity(intent);
             }
         };
         btnClient.setOnClickListener(oclBtnClient);
     }
+
+
 
 }

@@ -25,6 +25,8 @@ import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Client extends AsyncTask<Void, Void, String> {
 
@@ -37,10 +39,10 @@ public class Client extends AsyncTask<Void, Void, String> {
     IClientActivityCallback clientActivityCallback;
     IAddServrerActivityCallback addServrerActivityCallback;
     IEditServerActivityCallback editServerActivityCallback;
+    List<PhoneBook> newPhoneBookList;
     int port = 8080;
     String action;
     Socket socket;
-
     PhoneBook phoneBook,newPhoneBook;
 
     public Client(String addr, int port, TextView textResponse, Activity delegate,IClientActivityCallback callback) {
@@ -76,6 +78,16 @@ public class Client extends AsyncTask<Void, Void, String> {
         action=action_activity;
         phoneBook = phoneBook_activity;
     }
+    public Client(String addr, int port,TextView textResponse, IClientActivityCallback callback, String action_activity, List<PhoneBook> new_phoneBook_list,Activity delegate) {
+        dstAddress = addr;
+        dstPort = port;
+        this.textResponse = textResponse;
+        this.clientActivityCallback = callback;
+        newPhoneBookList = new_phoneBook_list;
+        action=action_activity;
+        tdelegate = delegate;
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected String doInBackground(Void... arg0) {
@@ -109,6 +121,32 @@ public class Client extends AsyncTask<Void, Void, String> {
                     }
                 }
             }break;
+            case "ADDLIST":{
+                try {
+                    socket = new Socket(dstAddress, dstPort);
+                    DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
+                    RequestPhoneApp.ADDLIST(dos,newPhoneBookList);
+                    DataInputStream dataInputStream = new DataInputStream(socket.getInputStream());
+                    File = "request_completed";
+                }
+                catch (UnknownHostException e) {
+                    e.printStackTrace();
+                    response = "UnknownHostException: " + e.toString();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    response = "IOException: " + e.toString();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } finally {
+                    if (socket != null) {
+                        try {
+                            socket.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }break;
             case "ADD":{
                 try {
                     socket = new Socket(dstAddress, dstPort);
@@ -118,11 +156,9 @@ public class Client extends AsyncTask<Void, Void, String> {
                     File = dataInputStream.readUTF();
                 }
                 catch (UnknownHostException e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                     response = "UnknownHostException: " + e.toString();
                 } catch (IOException e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                     response = "IOException: " + e.toString();
                 } catch (InterruptedException e) {
@@ -211,6 +247,11 @@ public class Client extends AsyncTask<Void, Void, String> {
             }break;
             case "ADD": {
                 addServrerActivityCallback.callingBackAddServerActivity();
+            }break;
+            case "ADDLIST": {
+                TextView msg = tdelegate.findViewById(R.id.textview_file);
+                msg.setText(File);
+                clientActivityCallback.callingBackClientActivity();
             }break;
             case "DELETE": {
                 editServerActivityCallback.callingBackEditServerActivity();

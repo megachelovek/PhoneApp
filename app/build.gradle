@@ -16,6 +16,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    compileOptions {
+        sourceCompatibility = '1.8'
+        targetCompatibility = '1.8'
+    }
 }
 
 dependencies {
@@ -28,6 +32,7 @@ dependencies {
     implementation 'com.android.support:recyclerview-v7:28.0.0'
     implementation 'com.google.code.gson:gson:2.8.2'
     compile group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: '2.0'
+    implementation 'com.squareup.picasso:picasso:2.71828'
 
 
 }

@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -41,14 +42,16 @@ public class ClientActivity extends AppCompatActivity implements IClientActivity
 
     private ListView lvPhone;
     private TextView selection;
-    private List<PhoneBook> listPhoneBook = new ArrayList<PhoneBook>();
+    private List<PhoneBook> listPhoneBookServer = new ArrayList<PhoneBook>();
+    private List<PhoneBook> listPhoneBookMain = new ArrayList<PhoneBook>();
     private PhoneAppDbHelper dbHelper;
     private SQLiteDatabase db;
     Client client;
     public TextView  msg,textview_file;
     int port =8080;
     private String File,ip,addr;
-    private Button ClientServer, ServerClient,AddToClient,AddtoServer;
+    private ImageButton AddToClient,AddListToClientServer;
+    private Button  ServerClient,AddtoServer;
     EditText ipfield;
     Cursor c;
 
@@ -62,12 +65,17 @@ public class ClientActivity extends AppCompatActivity implements IClientActivity
         lvPhone = (ListView) findViewById(R.id.listPhoneClient);
         msg = (TextView) findViewById(R.id.textView_msg);
         textview_file =(TextView) findViewById(R.id.textview_file);
-        AddToClient = (Button) findViewById(R.id.add_in_DB);
-        ClientServer = (Button) findViewById(R.id.button_client_server);
-        AddtoServer = (Button) findViewById(R.id.button_addserver);
-        ServerClient = (Button) findViewById(R.id.button_server_client);
+        AddToClient = (ImageButton) findViewById(R.id.ib_AddListPhoneBooksToClient);
+        AddListToClientServer = (ImageButton) findViewById(R.id.ib_AddListPhoneBooksToServer);
+        AddtoServer = (Button) findViewById(R.id.b_AddPhoneBookToServer);
+        ServerClient = (Button) findViewById(R.id.b_GetListFromServer);
         ipfield = (EditText) findViewById(R.id.editText_ip);
         msg.setText(getIPAddress(true));
+        Bundle arguments = getIntent().getExtras();
+        String listMain = arguments.getString("MainListPhoneBook");
+        Gson gson = new Gson();
+        Type PhoneBookListType = new TypeToken<ArrayList<PhoneBook>>(){}.getType();
+        ArrayList<PhoneBook> listPhoneBookMain = gson.fromJson(listMain,PhoneBookListType);
 
         dbHelper = new PhoneAppDbHelper(this);
         try {
@@ -96,18 +104,22 @@ public class ClientActivity extends AppCompatActivity implements IClientActivity
 
         };
         ServerClient.setOnClickListener(oclBtnServerClient);
-
         //Добавить записи с сервера на устройство
         View.OnClickListener oclBtnAddToClient = new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onClick(View v) {
-                if(listPhoneBook != null){
-                    for (PhoneBook phoneBook : listPhoneBook) {
-                        ContentValues cv = new ContentValues();
-                        cv.put(PhoneContract.PhoneEntry.COLUMN_NAME, phoneBook.getName());
-                        cv.put(PhoneContract.PhoneEntry.COLUMN_PHONENUMBER, phoneBook.getPhone());
-                        cv.put(PhoneContract.PhoneEntry.COLUMN_EMAIL, phoneBook.getPhone());
-                        db.insert("phonebook",null,cv);
+                if(listPhoneBookServer != null){
+                    for (PhoneBook phoneBook : listPhoneBookServer) {
+                        if (!containsPhoneBook(listPhoneBookMain,phoneBook)) {
+                            ContentValues cv = new ContentValues();
+                            cv.put(PhoneContract.PhoneEntry.COLUMN_NAME, phoneBook.getName());
+                            cv.put(PhoneContract.PhoneEntry.COLUMN_PHONENUMBER, phoneBook.getPhone());
+                            cv.put(PhoneContract.PhoneEntry.COLUMN_EMAIL, phoneBook.getEmail());
+                            cv.put(PhoneContract.PhoneEntry.COLUMN_IMAGEPATH, phoneBook.getImagePath());
+                            db.insert("phonebook", null, cv);
+                            listPhoneBookMain.add(phoneBook);
+                        }
                     }
                     Intent intent = new Intent(ClientActivity.this, MainActivity.class);
                     startActivity(intent);
@@ -131,7 +143,7 @@ public class ClientActivity extends AppCompatActivity implements IClientActivity
         lvPhone.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-                PhoneBook selectedItem = listPhoneBook.get(position);
+                PhoneBook selectedItem = listPhoneBookServer.get(position);
                 Intent intent = new Intent(ClientActivity.this, EditServerActivity.class);
                 intent.putExtra("ip", ipfield.getText().toString());
                 intent.putExtra("port", port);
@@ -139,6 +151,17 @@ public class ClientActivity extends AppCompatActivity implements IClientActivity
                 startActivity(intent);
             }
         });
+        //ДОБАВЛЕНИЕ СПИСКА НА СЕРВЕР
+        View.OnClickListener oclBtnAddListToClientServer = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                    String ip = ipfield.getText().toString();
+                    client = new Client(ip,port, msg,ClientActivity.this , "ADDLIST",listPhoneBookMain,ClientActivity.this);
+                    client.execute();
+            }
+        };
+        AddListToClientServer.setOnClickListener(oclBtnAddListToClientServer);
+
     }
 
 
@@ -173,10 +196,20 @@ public class ClientActivity extends AppCompatActivity implements IClientActivity
         File = textview_file.getText().toString();
         if (File!="request_completed") {
             Type type = new TypeToken<List<PhoneBook>>() {}.getType();
-            listPhoneBook = new Gson().fromJson(File, type);
-            PhoneBookAdapter adapter = new PhoneBookAdapter(this, listPhoneBook);
+            listPhoneBookServer = new Gson().fromJson(File, type);
+            PhoneBookAdapter adapter = new PhoneBookAdapter(this, listPhoneBookServer);
             lvPhone.setAdapter(adapter);
         }
     }
+
+    public boolean containsPhoneBook(List<PhoneBook> list,PhoneBook phoneBook){
+        for(PhoneBook phoneBookServer : list){
+            if (phoneBookServer.getName().equals(phoneBook.getName())  && phoneBookServer.getPhone().equals(phoneBook.getPhone()) && phoneBookServer.getEmail().equals(phoneBook.getEmail()) ){
+                return true;
+            }
+        }
+        return false;
+    }
+
 
 }

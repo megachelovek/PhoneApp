@@ -7,12 +7,11 @@
     <ListView
         android:id="@+id/listPhone"
         android:layout_width="fill_parent"
-        android:layout_height="450dp">
-    </ListView>
+        android:layout_height="550dp"></ListView>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:gravity="bottom"
         android:orientation="horizontal">
 
@@ -41,7 +40,7 @@
     <TextView
         android:id="@+id/selection"
         android:layout_width="match_parent"
-        android:layout_height="104dp"
+        android:layout_height="1dp"
         android:textSize="22sp" />
 
 </LinearLayout>
