@@ -101,7 +101,6 @@ public class ClientActivity extends AppCompatActivity implements IClientActivity
                 client = new Client(ipfield.getText().toString(),port,msg,ClientActivity.this,ClientActivity.this);
                 client.execute();
             }
-
         };
         ServerClient.setOnClickListener(oclBtnServerClient);
         //Добавить записи с сервера на устройство
